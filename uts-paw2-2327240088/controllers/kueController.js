@@ -1,21 +1,14 @@
-import kueModel from '../models/kueModel';
-import { errorHttp } from '../middlewares/errorHandler';
+const Kue = require('../models/kueModel');
 
-export function getAll(req, res) {
-  res.json(kueModel.getAll());
-}
+exports.create = async (req, res) => {
+  try {
+    const kue = await Kue.create(req.body);
+    res.status(201).json(kue);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 
-export function getById(req, res, next) {
-  const id = parseInt(req.params.id);
-  const data = kueModel.getById(id);
-  if (!data) return next(errorHttp(404, 'kue tidak ditemukan'));
-  res.json(data);
-}
-
-export function create(req, res, next) {
-  const { nama } = req.body;
-  if (!nama) return next(errorHttp(400, 'jenis kue wajib diisi'));
-
-  const baru = kueModel.create({ nama });
-  res.status(201).json(baru);
-}
+exports.getAll = async (req, res) => {
+  res.json(await Kue.find());
+};
