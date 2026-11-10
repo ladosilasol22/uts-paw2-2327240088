@@ -3,8 +3,8 @@
 // data lama dihapus dulu.
 require('dotenv').config({ quiet: true });
 const mongoose = require('mongoose');
-const kue = require('./models/kueModel');
-const kategoriKue = require('./models/kategoriKueModel');
+const Prodi = require('./models/prodiModel');
+const Mahasiswa = require('./models/mahasiswaModel');
 
 const NAMA = ['Andi', 'Budi', 'Citra', 'Dewi', 'Eko', 'Fitri', 'Gita', 'Hadi', 'Indra', 'Joko',
   'Kiki', 'Lina', 'Maya', 'Nanda', 'Oka', 'Putri', 'Qori', 'Rina', 'Sari', 'Tono',
@@ -13,24 +13,24 @@ const KOTA = ['Palembang', 'Indralaya', 'Prabumulih', 'Lubuklinggau'];
 
 async function main() {
   await mongoose.connect(process.env.DB_URI);
-  await KategoriKue.deleteMany({});
-  await Kue.deleteMany({});
+  await Mahasiswa.deleteMany({});
+  await Prodi.deleteMany({});
 
-  const Kue = await kue.insertMany([
-    { kode: 'BLU', nama: 'BOLU' },
-    { kode: 'PCK', nama: 'PANCAKE' },
-    { kode: 'LCK', nama: 'LAVACAKE' },
+  const prodi = await Prodi.insertMany([
+    { kode: 'SI', nama: 'Sistem Informasi' },
+    { kode: 'TI', nama: 'Teknik Informatika' },
+    { kode: 'MI', nama: 'Manajemen Informatika' },
   ]);
 
-  const KategoriKue = NAMA.map((nama, i) => ({
+  const mahasiswa = NAMA.map((nama, i) => ({
     nama,
     nim: String(2301001 + i),
     alamat: { jalan: `Jl. Contoh No. ${i + 1}`, kota: KOTA[i % KOTA.length] },
-    prodiId: prodi[i % 3]._id,
+    prodiId: prodi[i % 3]._id, // SI, TI, MI bergantian
   }));
-  await KategoriKue.insertMany(kategoriKue);
+  await Mahasiswa.insertMany(mahasiswa);
 
-  console.log(`Seed selesai: ${prodi.length} prodi, ${kategoriKue.length} kategoriKue`);
+  console.log(`Seed selesai: ${prodi.length} prodi, ${mahasiswa.length} mahasiswa`);
   await mongoose.disconnect();
 }
 

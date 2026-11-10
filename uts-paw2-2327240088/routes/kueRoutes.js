@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const c = require('../controllers/kueController');
+const kueController = require('../controllers/kueController');
 const cekApiKey = require('../middlewares/cekApiKey');
 
-router.get('/', c.getAll);
-router.post('/', cekApiKey, c.create);
+router.get('/', kueController.getAll);
+router.get('/:id', kueController.getById);
+router.post('/', cekApiKey, kueController.create);
+router.put('/:id', cekApiKey, kueController.update);
+router.delete('/:id', cekApiKey, kueController.remove);
 
 module.exports = router;
